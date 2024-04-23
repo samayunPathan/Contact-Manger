@@ -1,13 +1,23 @@
 import React from "react";
 import Header from "./Header/Header";
 import ContactTable from "./Body/ContactTable";
+import Auth from "./AUTH/Auth";
+
+import { BrowserRouter as Router,Routes,Route } from 'react-router-dom';
 
 
-const MainComponent=()=>{
+const MainComponent=(props)=>{
     return(
         <div>
+            <Router>
             <Header/>
-            <ContactTable/>
+            <Routes>
+            <Route path ="/login" element={<Auth/>}/>
+            <Route path ="/con" element={<ContactTable/>}/> 
+            </Routes>
+            </Router>
+            
+            
            
         </div>
     )
