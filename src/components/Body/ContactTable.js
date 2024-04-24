@@ -42,8 +42,8 @@ const ContactTable = () => {
         error += 'Name is required , ';
     if(phoneNumber==='')
         error += 'PhoneNumer is required , ';
-    if(image==='')
-        error += 'Image is required , ';
+    // if(image==='')
+        // error += 'Image is required , ';
     if(division==='')
         error += 'Division is required !';
     if (error ===''){
