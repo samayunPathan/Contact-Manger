@@ -5,13 +5,18 @@ import {
 } from 'reactstrap';
 import './Header.css';
 import { NavLink } from 'react-router-dom';
+import { connect } from "react-redux";
 
-const Header= () => {
-    return (
-        <div className="navigation container">
-            <div className="with-margin">
-            <NavbarBrand style={{fontSize:'x-large' ,color :'white'}} >Contact Manager</NavbarBrand>
-            </div>
+const mapStateToProps = state => {
+    return {
+        token:state.token,
+    }
+}
+
+const Header= (props) => {
+    let links=null;
+    if (props.token===null){
+        links=(
                 <Nav className="">
                     <NavItem >
                         <NavLink to ="/" style={{color:'white',textDecoration: 'none'}} className="inactive">Profile</NavLink>
@@ -24,8 +29,29 @@ const Header= () => {
                     </NavItem>
 
                 </Nav>
+        )
+    }else{
+    links=(
+        <Nav className="">
+                    <NavItem >
+                        <NavLink to ="/" style={{color:'white',textDecoration: 'none'}} className="inactive">Profile</NavLink>
+                    </NavItem>
+                    
+                    <NavItem>
+                    <NavLink to="/" style={{color:'white',textDecoration: 'none'}}>Log Out</NavLink>
+                    </NavItem>
+
+                </Nav>
+    )
+    }
+    return (
+        <div className="navigation container">
+            <div className="with-margin">
+            <NavbarBrand style={{fontSize:'x-large' ,color :'white'}} >Contact Manager</NavbarBrand>
+            </div>
+                {links}
 
         </div>
     )
 }
-export default Header
+export default connect(mapStateToProps) (Header)
