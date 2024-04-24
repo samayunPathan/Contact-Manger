@@ -3,12 +3,19 @@ import Header from "./Header/Header";
 import ContactTable from "./Body/ContactTable";
 import Auth from "./AUTH/Auth";
 
-import { BrowserRouter as Router,Routes,Route,Navigate } from 'react-router-dom';
+import { BrowserRouter as Router,Routes,Route } from 'react-router-dom';
 import { connect } from "react-redux";
+import { authCheck } from "../redux/actionCreators";
 
 const mapStateToProps = state =>{
     return {
         token:state.token,
+    }
+}
+
+const mapDispatchToProps = dispatch =>{
+    return {
+        authCheck:()=>dispatch(authCheck()),
     }
 }
 
@@ -38,4 +45,4 @@ const MainComponent=(props)=>{
     )
     
 }
-export default connect(mapStateToProps)(MainComponent)
+export default connect(mapStateToProps,mapDispatchToProps)(MainComponent)
