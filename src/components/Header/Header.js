@@ -24,9 +24,7 @@ const Header= (props) => {
                     <NavItem className="ms-auto">
                         <NavLink to="/login" style={{color:'white' ,textDecoration: 'none'}} >Login</NavLink>
                     </NavItem>
-                    <NavItem>
-                    <NavLink to="/" style={{color:'white',textDecoration: 'none'}}>Log Out</NavLink>
-                    </NavItem>
+                    
 
                 </Nav>
         )
@@ -38,7 +36,7 @@ const Header= (props) => {
                     </NavItem>
                     
                     <NavItem>
-                    <NavLink to="/" style={{color:'white',textDecoration: 'none'}}>Log Out</NavLink>
+                    <NavLink to="/logout" style={{color:'white',textDecoration: 'none'}}>Log Out</NavLink>
                     </NavItem>
 
                 </Nav>

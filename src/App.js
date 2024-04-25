@@ -1,6 +1,6 @@
 import './App.css';
 import MainComponent from './components/MainComponent';
-import { store } from './redux/reducer';
+import { store } from './redux/store';
 import { Provider } from 'react-redux';
 
 
