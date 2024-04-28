@@ -25,23 +25,33 @@ export const auth=(email,password,mode)=>dispatch=>{
         email:email,
         password:password,
     }
+
+    const header ={
+        Headers:{
+            "Content-Type":"application/json"
+        }
+    }
+
     let authUrl=null;
     if(mode==='Sign Up'){
-        authUrl="#";
+        authUrl="http://127.0.0.1:8000/api/user/";
     }else{
-        authUrl="#";
+        authUrl="http://127.0.0.1:8000/api/user/";
     }
-    const API_KEY='#';
-    axios.post(authUrl+API_KEY,authData)
+    
+    axios.post(authUrl,authData,header)
     .then(response =>{
-        localStorage.setItem('token',response.data.idToken);
-        localStorage.setItem('userId',response.data.localId);
-        const expirationTime=new Date(new Date().getTime()+response.data.expiresIn*1000);
-        localStorage.setItem('expirationTime',expirationTime);
-        dispatch(authSuccess(response.data.idToken,response.data.localId))
+        // localStorage.setItem('token',response.data.idToken);
+        // localStorage.setItem('userId',response.data.localId);
+        // const expirationTime=new Date(new Date().getTime()+response.data.expiresIn*1000);
+        // localStorage.setItem('expirationTime',expirationTime);
+        // dispatch(authSuccess(response.data.idToken,response.data.localId))
+        console.log(response)
     })
     .catch(err=>{
-        dispatch(authFailed(err.response.data.error.message));
+        const key=Object.keys(err.response.data)[0];
+        console.log(err.response.data[key])
+        dispatch(authFailed(`${key.toUpperCase()} : ${err.response.data[key]}`));
     })
 }
 

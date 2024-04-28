@@ -37,11 +37,14 @@ class Auth extends Component {
                 passwordConfirm:"",
             }
         }
-            onSubmit={
-                values=>{
-                    this.props.auth(values.email,values.password,values.state.mode);
-                }
-            }
+            // onSubmit={
+            //     (values)=>{
+            //         this.props.auth(values.email,values.password,this.values.mode)
+            //     }
+            // }
+            onSubmit={(values) => {
+                this.props.auth(values.email, values.password, this.props.mode);
+              }}
 
             validate={(values)=>{
                 const errors={};
@@ -106,8 +109,9 @@ class Auth extends Component {
         </Formik>
         return(
             <div>
-                {form}
                 {err}
+                {form}
+                
             </div>
         )
     }

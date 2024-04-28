@@ -21,9 +21,9 @@ const mapDispatchToProps = dispatch =>{
 }
 
 class MainComponent extends Component {
-    // componentDidMount(){
-    //     this.props.authCheck();
-    // }
+    componentDidMount(){
+        this.props.authCheck();
+    }
     render(){
         return(
             <div>
@@ -33,10 +33,7 @@ class MainComponent extends Component {
                 {this.props.token === null ? (
                     
                     <Route path="/login" element={<Auth />} />
-                        
-                    
-              
-              
+          
             ) : (
                 <>
               <Route path="/con" element={<ContactTable />} />

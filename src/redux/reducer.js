@@ -4,7 +4,7 @@ import * as actionTypes from './actionTypes';
 const INITAL_STATE= {
     token: null,
     userId:null,
-    authFailedMsg:null,
+    authFailedMsg:"",
 
 
 
