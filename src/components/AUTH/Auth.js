@@ -19,10 +19,10 @@ const mapStateToProps = state => {
 
 class Auth extends Component {
     state={
-        mode:'Sign Up'
+        mode:"Sign Up"
     }
     handleModel=()=>{
-        this.setState({mode:this.state.mode==='Sign Up'?'Login':'Sign Up'})
+        this.setState({mode:this.state.mode ==="Sign Up" ? "Login": "Sign Up"})
     }
     render(){
         let err=null;
@@ -37,14 +37,12 @@ class Auth extends Component {
                 passwordConfirm:"",
             }
         }
-            // onSubmit={
-            //     (values)=>{
-            //         this.props.auth(values.email,values.password,this.values.mode)
-            //     }
-            // }
-            onSubmit={(values) => {
-                this.props.auth(values.email, values.password, this.props.mode);
-              }}
+            onSubmit={
+                (values)=>{
+                    this.props.auth(values.email,values.password,this.state.mode)
+                }
+            }
+            
 
             validate={(values)=>{
                 const errors={};
@@ -73,7 +71,7 @@ class Auth extends Component {
         {({values,handleChange,handleSubmit,errors})=>(<div style={{border:'1px gray solid', marginTop:'30px', padding:'25px', borderRadius:'10px'}}className="container">
             <button 
             style={{height:'35px',width:'50%',border:'1px', backgroundColor:'#068888', borderRadius:'5px', marginBottom:'10px',color:'white'}}
-            className="btn btn-success" onClick={this.handleModel}>Switch to {this.state.mode==="Sign Up"? "Login":"Sign Up"}</button><br/>
+            className="btn btn-success" onClick={this.handleModel}>Switch to {this.state.mode ==="Sign Up"? "Login":"Sign Up"}</button><br/>
             <form onSubmit={handleSubmit}>
                 <input
                 name="email"
@@ -93,7 +91,7 @@ class Auth extends Component {
                 />
                 <span style={{color:'red'}}>{errors.password}</span>
                 <br/>
-                {this.state.mode==='Sign Up'?<div><input
+                {this.state.mode === 'Sign Up'?<div><input
                 name="passwordConfirm"
                 placeholder="Confirm password"
                 className="form-control"
@@ -103,7 +101,7 @@ class Auth extends Component {
                 <span style={{color:'red'}}>{errors.passwordConfirm}</span>
                 <br/></div>:null}
                 
-                <button type="submit" className="btn btn-success">{this.state.mode==='Sign Up'?'Sign Up':'Login'}</button>
+                <button type="submit" className="btn btn-success">{this.state.mode ==="Sign Up"?"Sign Up":"Login"}</button>
             </form>
         </div>)}
         </Formik>

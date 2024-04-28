@@ -1,6 +1,7 @@
 import { type } from '@testing-library/user-event/dist/type';
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 
 export const authSuccess=(token,userId)=>{
     return {
@@ -20,10 +21,13 @@ export const authFailed=(errMessage)=>{
     }
 }
 
+
+
 export const auth=(email,password,mode)=>dispatch=>{
     const authData={
         email:email,
         password:password,
+        
     }
 
     const header ={
@@ -33,22 +37,34 @@ export const auth=(email,password,mode)=>dispatch=>{
     }
 
     let authUrl=null;
-    if(mode==='Sign Up'){
+    if(mode === "Sign Up"){
         authUrl="http://127.0.0.1:8000/api/user/";
+        
     }else{
-        authUrl="http://127.0.0.1:8000/api/user/";
+        authUrl="http://127.0.0.1:8000/api/token/";
+        // authUrl="http://127.0.0.1:8000/api/token/";
+    
     }
     
     axios.post(authUrl,authData,header)
     .then(response =>{
-        // localStorage.setItem('token',response.data.idToken);
-        // localStorage.setItem('userId',response.data.localId);
-        // const expirationTime=new Date(new Date().getTime()+response.data.expiresIn*1000);
-        // localStorage.setItem('expirationTime',expirationTime);
-        // dispatch(authSuccess(response.data.idToken,response.data.localId))
-        console.log(response)
+        const token=response.data.access;
+        const decoded=jwtDecode(token);
+        const expTime=decoded.exp;
+        const userId=decoded.user_id;
+        if( mode !== 'Sign Up'){
+        localStorage.setItem('token',token);
+        localStorage.setItem('userId',userId);
+        const expirationTime=new Date(expTime*1000);
+        localStorage.setItem('expirationTime',expirationTime);
+        dispatch(authSuccess(token,userId))
+        }
+        
+        console.log(jwtDecode(response.data.access));
+        // console.log(response)
     })
     .catch(err=>{
+        console.log(err.response);
         const key=Object.keys(err.response.data)[0];
         console.log(err.response.data[key])
         dispatch(authFailed(`${key.toUpperCase()} : ${err.response.data[key]}`));
