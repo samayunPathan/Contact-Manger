@@ -20,8 +20,17 @@ export const authFailed=(errMessage)=>{
         payload:errMessage,
     }
 }
+const storeLocally=token=>{
+    const decoded=jwtDecode(token);
+    const expTime=decoded.exp;
+    const userId=decoded.user_id;
+    localStorage.setItem('token',token);
+    localStorage.setItem('userId',userId);
+    const expirationTime=new Date(expTime*1000);
+    localStorage.setItem('expirationTime',expirationTime);
 
-
+    return userId;
+}
 
 export const auth=(email,password,mode)=>dispatch=>{
     const authData={
@@ -42,26 +51,26 @@ export const auth=(email,password,mode)=>dispatch=>{
         
     }else{
         authUrl="http://127.0.0.1:8000/api/token/";
-        // authUrl="http://127.0.0.1:8000/api/token/";
     
     }
     
     axios.post(authUrl,authData,header)
     .then(response =>{
-        const token=response.data.access;
-        const decoded=jwtDecode(token);
-        const expTime=decoded.exp;
-        const userId=decoded.user_id;
         if( mode !== 'Sign Up'){
-        localStorage.setItem('token',token);
-        localStorage.setItem('userId',userId);
-        const expirationTime=new Date(expTime*1000);
-        localStorage.setItem('expirationTime',expirationTime);
-        dispatch(authSuccess(token,userId))
+        const token=response.data.access;
+        const userId=storeLocally(token);
+        dispatch(authSuccess(token,userId));
+        } else{
+            return axios.post("http://127.0.0.1:8000/api/token/",authData,header)
+            .then(response=>{
+                const token=response.data.access;
+            const userId=storeLocally(token);
+            dispatch(authSuccess(token,userId));
+            })
         }
         
-        console.log(jwtDecode(response.data.access));
-        // console.log(response)
+        // console.log(jwtDecode(response));
+        console.log(response)
     })
     .catch(err=>{
         console.log(err.response);
