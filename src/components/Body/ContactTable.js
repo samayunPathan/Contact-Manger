@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
-import contactDB from './ContactDB';
 import './ContactTable.css'; 
+import axios from 'axios';
 
 const ContactTable = () => {
   const [data, setdata] = useState([]);
@@ -12,18 +12,35 @@ const ContactTable = () => {
   const [isUpdate,setUpdate]=useState(false);
 
   useEffect(()=>{
-    setdata(contactDB)
+    fetch("http://127.0.0.1:8000/api/contact/",{
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json'
+      }
+    })
+    .then(response=>response.json())
+    .then(response=>setdata(response))
+    
   },[])
 
-  const handleDeleteContact = (id) => {
-    if (id>0)
-    {
-      if(window.confirm('Are Sure to delete this contact !!')){
-        const newcontact=data.filter(contact => contact.id !== id);
-        setdata(newcontact);
-        }
+
+  const handleDeleteContact = async (id) => {
+      if (id > 0) {
+          if (window.confirm('Are you sure you want to delete this contact?')) {
+              try {
+                  await axios.delete(`http://127.0.0.1:8000/api/contact/${id}/`);
+
+                  const newContacts = data.filter(contact => contact.id !== id);
+                  setdata(newContacts);
+              } catch (error) {
+                  console.error('Error deleting contact:', error);
+ 
+              }
+          }
       }
-    }
+  };
+  
+
   const handleEditContact=(id)=>{
     const dt=data.filter(contact=>contact.id===id);
     if( dt!==undefined){
@@ -36,35 +53,42 @@ const ContactTable = () => {
     }
 
   }
-  const handleSaveContact=(e)=>{
-    let error = '';
-    if(name==='')
-        error += 'Name is required , ';
-    if(phoneNumber==='')
-        error += 'PhoneNumer is required , ';
-    // if(image==='')
-        // error += 'Image is required , ';
-    if(division==='')
-        error += 'Division is required !';
-    if (error ===''){
+
+
+  const handleSaveContact = async (e) => {
     e.preventDefault();
-    const dt=[...data];
-    const newContact={
-        id:contactDB.length+1,
-        name:name,
-        phoneNumber:phoneNumber,
-        image:image,
-        division:division,
-    }
-    dt.push(newContact);
-    setdata(dt);
-    }
-    else {
-        alert(error)
-    }
+    try {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('phoneNumber', phoneNumber);
+        formData.append('division', division);
+        formData.append('image',null)
+        // Iimage file 
+        // const imageInput = e.target.elements.image;
+        // if (imageInput && imageInput.files.length > 0) {
+        //     formData.append('image', imageInput.files[0]);
+        // }
 
 
-  }
+        // replace '1' with correct id
+        formData.append('added_by', 1); 
+
+        const response = await axios.post("http://127.0.0.1:8000/api/contact/", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        setdata([...data, response.data]);
+        handleClear();
+    } catch (error) {
+        console.error('Error saving contact:', error);
+      
+    }
+};
+
+
+
   const handleClear=()=>{
     setid(0);
     setName('');
@@ -74,21 +98,34 @@ const ContactTable = () => {
     setUpdate(false)
 
   }
- const handleUpdate=()=>{
-    const index=data.map((contact)=>{
-        return contact.id
-    }).indexOf(id);
 
-    const dt=[...data];
-    dt[index].name=name;
-    dt[index].phoneNumber=phoneNumber;
-    dt[index].image=image;
-    dt[index].division=division;
 
-    setdata(dt);
-    handleClear()
 
- }
+  const handleUpdate = async () => {
+      try {
+          const updatedContact = {
+              name: name,
+              phoneNumber: phoneNumber,
+              division: division,
+              image: image
+          };
+  
+          await axios.patch(`http://127.0.0.1:8000/api/contact/${id}/`, updatedContact);
+ 
+          const updatedData = data.map(contact => {
+              if (contact.id === id) {
+                  return { ...contact, ...updatedContact };
+              }
+              return contact;
+          });
+          setdata(updatedData);
+          handleClear();
+      } catch (error) {
+          console.error('Error updating contact:', error);
+   
+      }
+  };
+  
 
   return (
     <div > 
@@ -114,7 +151,7 @@ const ContactTable = () => {
               <td>{contact.name}</td>
               <td>{contact.phoneNumber}</td>
               <td>{contact.division}</td>
-              <td>{contact.createdBy}</td>
+              <td>{contact.added_by}</td>
               <td>
                 <button onClick={() => handleDeleteContact(contact.id)}>Delete</button>
               </td>
@@ -153,7 +190,7 @@ const ContactTable = () => {
           
 
             <td>
-            <input type="file" onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))} />
+            <input type="text"  onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))} />
             
             </td>
           

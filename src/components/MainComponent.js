@@ -36,7 +36,7 @@ class MainComponent extends Component {
           
             ) : (
                 <>
-              <Route path="/con" element={<ContactTable />} />
+              <Route path="" element={<ContactTable />} />
               <Route path="/logout" element={<Logout />} />
               </>
             )}
