@@ -6,7 +6,7 @@ const ContactTable = () => {
   const [data, setdata] = useState([]);
   const [name, setName] = useState("");
   const [phoneNumber, setphoneNumber] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const [division, setDivision] = useState("");
   const [id, setid] = useState(0);
   const [isUpdate,setUpdate]=useState(false);
@@ -62,13 +62,11 @@ const ContactTable = () => {
         formData.append('name', name);
         formData.append('phoneNumber', phoneNumber);
         formData.append('division', division);
-        formData.append('image',null)
-        // Iimage file 
-        // const imageInput = e.target.elements.image;
-        // if (imageInput && imageInput.files.length > 0) {
-        //     formData.append('image', imageInput.files[0]);
-        // }
-
+        if (image) {
+          formData.append('image', image); 
+        }
+        
+        
 
         // replace '1' with correct id
         formData.append('added_by', 1); 
@@ -190,7 +188,7 @@ const ContactTable = () => {
           
 
             <td>
-            <input type="text"  onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))} />
+            <input type="file" onChange={(e) => setImage(e.target.files[0])} />
             
             </td>
           
