@@ -25,20 +25,26 @@ const ContactTable = () => {
 
 
   const handleDeleteContact = async (id) => {
-      if (id > 0) {
-          if (window.confirm('Are you sure you want to delete this contact?')) {
-              try {
-                  await axios.delete(`http://127.0.0.1:8000/api/contact/${id}/`);
+    if (id > 0) {
+        if (window.confirm('Are you sure you want to delete this contact?')) {
+            try {
+                console.log('Deleting contact...');
 
-                  const newContacts = data.filter(contact => contact.id !== id);
-                  setdata(newContacts);
-              } catch (error) {
-                  console.error('Error deleting contact:', error);
- 
-              }
-          }
-      }
-  };
+                await axios.delete(`http://127.0.0.1:8000/api/contact/${id}/`);
+
+                console.log('Contact deleted successfully.');
+
+                const newContacts = data.filter(contact => contact.id !== id);
+                console.log('New contacts:', newContacts);
+
+                setdata(newContacts);
+            } catch (error) {
+                console.error('Error deleting contact:', error);
+            }
+        }
+    }
+};
+
   
 
   const handleEditContact=(id)=>{
@@ -145,7 +151,7 @@ const ContactTable = () => {
         <tbody>
           {data.map((contact) => (
             <tr key={contact.id}>
-              <td>{contact.image}</td>
+              <td><img src={contact.image} alt={contact.name} style={{ width: '50px', height: '40px' }}/></td>
               <td>{contact.name}</td>
               <td>{contact.phoneNumber}</td>
               <td>{contact.division}</td>
