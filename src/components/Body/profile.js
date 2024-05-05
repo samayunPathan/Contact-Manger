@@ -21,8 +21,8 @@ const Profile = (props) => {
 
   return (
     <div className="container">
-      <h1>Welcome {userData ? userData.username : ""}</h1>
-      {userData && (
+      <h1>Welcome </h1>
+      {userData &&(
         <div>
           <p>Email: {userData.email}</p>
         </div>
